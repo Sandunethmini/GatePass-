@@ -106,7 +106,7 @@ const ImageViewerModal = ({ images, isOpen, onClose, itemDescription }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
-      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl border border-gray-700">
+      <div className="bg-linear-to-br from-gray-900 to-gray-800 rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl border border-gray-700">
         <div className="relative">
           {/* Main display area */}
           <div className="h-80 md:h-96 overflow-hidden relative bg-black">
@@ -188,7 +188,7 @@ const ImageViewerModal = ({ images, isOpen, onClose, itemDescription }) => {
           </div>
 
           {/* Header with close button */}
-          <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/70 to-transparent">
+          <div className="absolute top-0 left-0 right-0 p-4 bg-linear-to-b from-black/70 to-transparent">
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-white">
                 {itemDescription}
@@ -564,7 +564,7 @@ const RequestDetailsModal = ({
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6">
+        <div className="bg-linear-to-r from-blue-600 to-blue-800 p-6">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-white flex items-center">
               <FaBoxOpen className="mr-3" /> Request Details
@@ -1343,7 +1343,7 @@ const GatePassRequests = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 p-8">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 to-blue-50 p-8">
       {/* Success message for cancel */}
       {cancelSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">

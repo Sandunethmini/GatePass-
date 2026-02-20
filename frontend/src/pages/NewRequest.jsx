@@ -12,6 +12,14 @@ import {
   Info,
   Search,
 } from "lucide-react";
+import ValidatedInput from "../components/ValidatedInput.jsx";
+import {
+  validateNIC,
+  validatePhone,
+  validateEmail,
+  formatPhoneNumber,
+  normalizeEmail,
+} from "../utils/validationHelpers.js";
 import {
   searchEmployeeByServiceNo,
   createGatePassRequest,
@@ -90,6 +98,18 @@ const NewRequest = () => {
   const [nonSLTTransporterPhone, setNonSLTTransporterPhone] = useState("");
   const [nonSLTTransporterEmail, setNonSLTTransporterEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Validation error states
+  const [receiverNICError, setReceiverNICError] = useState("");
+  const [receiverContactError, setReceiverContactError] = useState("");
+  const [receiverNameError, setReceiverNameError] = useState("");
+  const [companyNameError, setCompanyNameError] = useState("");
+  const [companyAddressError, setCompanyAddressError] = useState("");
+  const [nonSLTTransporterNICError, setNonSLTTransporterNICError] = useState("");
+  const [nonSLTTransporterPhoneError, setNonSLTTransporterPhoneError] = useState("");
+  const [nonSLTTransporterEmailError, setNonSLTTransporterEmailError] = useState("");
+  const [nonSLTTransporterNameError, setNonSLTTransporterNameError] = useState("");
+  const [vehicleNumberError, setVehicleNumberError] = useState("");
   const [execRestriction, setExecRestriction] = useState({
     restricted: false,
     reason: null,
@@ -502,6 +522,165 @@ const NewRequest = () => {
     }
   };
 
+  // Validation Handlers for Real-time Feedback
+  
+  const handleReceiverNICChange = (e) => {
+    const value = e.target.value;
+    setReceiverNIC(value);
+    
+    // Real-time validation
+    if (value.trim()) {
+      const validation = validateNIC(value);
+      setReceiverNICError(validation.error || "");
+    } else {
+      setReceiverNICError("");
+    }
+  };
+
+  const handleReceiverContactChange = (e) => {
+    let value = e.target.value;
+    // Auto-format: remove spaces and dashes
+    value = formatPhoneNumber(value);
+    setReceiverContact(value);
+    
+    // Real-time validation
+    if (value.trim()) {
+      const validation = validatePhone(value);
+      setReceiverContactError(validation.error || "");
+    } else {
+      setReceiverContactError("");
+    }
+  };
+
+  const handleNonSLTTransporterNICChange = (e) => {
+    const value = e.target.value;
+    setNonSLTTransporterNIC(value);
+    
+    // Real-time validation
+    if (value.trim()) {
+      const validation = validateNIC(value);
+      setNonSLTTransporterNICError(validation.error || "");
+    } else {
+      setNonSLTTransporterNICError("");
+    }
+  };
+
+  const handleNonSLTTransporterPhoneChange = (e) => {
+    let value = e.target.value;
+    // Auto-format: remove spaces and dashes
+    value = formatPhoneNumber(value);
+    setNonSLTTransporterPhone(value);
+    
+    // Real-time validationS
+    if (value.trim()) {
+      const validation = validatePhone(value);
+      setNonSLTTransporterPhoneError(validation.error || "");
+    } else {
+      setNonSLTTransporterPhoneError("");
+    }
+  };
+
+  const handleNonSLTTransporterEmailChange = (e) => {
+    let value = e.target.value;
+    // Auto-normalize: convert to lowercase and trim
+    value = normalizeEmail(value);
+    setNonSLTTransporterEmail(value);
+    
+    // Real-time validation
+    if (value.trim()) {
+      const validation = validateEmail(value);
+      setNonSLTTransporterEmailError(validation.error || "");
+    } else {
+      setNonSLTTransporterEmailError("");
+    }
+  };
+
+  const handleReceiverNameChange = (e) => {
+    const value = e.target.value;
+    setReceiverName(value);
+    
+    // Real-time validation
+    if (value.trim()) {
+      if (value.trim().length < 2) {
+        setReceiverNameError("Receiver name must be at least 2 characters");
+      } else {
+        setReceiverNameError("");
+      }
+    } else {
+      setReceiverNameError("");
+    }
+  };
+
+  const handleCompanyNameChange = (e) => {
+    const value = e.target.value;
+    setCompanyName(value);
+    
+    // Real-time validation
+    if (value.trim()) {
+      if (value.trim().length < 2) {
+        setCompanyNameError("Company/Organization name must be at least 2 characters");
+      } else {
+        setCompanyNameError("");
+      }
+    } else {
+      setCompanyNameError("");
+    }
+  };
+
+  const handleCompanyAddressChange = (e) => {
+    const value = e.target.value;
+    setCompanyAddress(value);
+    
+    // Real-time validation
+    if (value.trim()) {
+      if (value.trim().length < 2) {
+        setCompanyAddressError("Company/Organization address must be at least 2 characters");
+      } else {
+        setCompanyAddressError("");
+      }
+    } else {
+      setCompanyAddressError("");
+    }
+  };
+
+  const handleNonSLTTransporterNameChange = (e) => {
+    const value = e.target.value;
+    setNonSLTTransporterName(value);
+
+    // Validate transporter name: min 3 characters, max 100, only letters, spaces, and common punctuation
+    const namePattern = /^[a-zA-Z\s.'-]+$/;
+    
+    if (value.trim().length === 0) {
+      setNonSLTTransporterNameError("");
+    } else if (value.trim().length < 3) {
+      setNonSLTTransporterNameError("Transporter name must be at least 3 characters");
+    } else if (value.length > 100) {
+      setNonSLTTransporterNameError("Transporter name must not exceed 100 characters");
+    } else if (!namePattern.test(value)) {
+      setNonSLTTransporterNameError("Transporter name can only contain letters, spaces, and basic punctuation (. ' -)");
+    } else {
+      setNonSLTTransporterNameError("");
+    }
+  };
+
+  const handleVehicleNumberChange = (e) => {
+    const value = e.target.value.toUpperCase();
+    setVehicleNumber(value);
+
+    // Validate Sri Lankan vehicle number format
+    // Formats: ABC-1234, ABC1234, XX-1234, XX1234, XXX-1234, XXX1234, 12-1234, 121234
+    // Pattern: 2-3 alphanumeric characters, optional hyphen, 4 digits
+    const vehiclePattern = /^[A-Z0-9]{2,3}-?\d{4}$/;
+    
+    if (value.trim().length === 0) {
+      setVehicleNumberError("");
+    } else if (!vehiclePattern.test(value)) {
+      setVehicleNumberError("Invalid Sri Lankan vehicle number format (e.g., ABC-1234, ABQ4976)");
+    } else {
+      setVehicleNumberError("");
+    }
+  };
+
   // Add this function to the NewRequest component
   const sendExecutiveNotificationEmail = async (
     executiveData,
@@ -628,6 +807,75 @@ const NewRequest = () => {
         return;
       }
 
+      // ⭐ VALIDATION: Validate NIC, Phone, Email, and Name fields if they have values
+      if (destinationType === "non-slt") {
+        // Validate receiver name if provided
+        if (receiverName.trim() && receiverName.trim().length < 2) {
+          setReceiverNameError("Receiver name must be at least 2 characters");
+          showToast("Please fix receiver name errors before submitting", "error");
+          return;
+        }
+
+        // Validate receiver NIC if provided
+        if (receiverNIC.trim()) {
+          const nicValidation = validateNIC(receiverNIC);
+          if (!nicValidation.isValid) {
+            setReceiverNICError(nicValidation.error);
+            showToast("Please fix receiver NIC errors before submitting", "error");
+            return;
+          }
+        }
+
+        // Validate receiver contact if provided
+        if (receiverContact.trim()) {
+          const phoneValidation = validatePhone(receiverContact);
+          if (!phoneValidation.isValid) {
+            setReceiverContactError(phoneValidation.error);
+            showToast("Please fix receiver contact errors before submitting", "error");
+            return;
+          }
+        }
+      }
+
+      // Validate transporter details if Non-SLT
+      if (transporterType === "Non-SLT") {
+        // Validate transporter name
+        if (nonSLTTransporterName.trim() && nonSLTTransporterNameError) {
+          showToast("Please fix transporter name errors before submitting", "error");
+          return;
+        }
+        
+        // Validate NIC
+        if (nonSLTTransporterNIC.trim()) {
+          const nicValidation = validateNIC(nonSLTTransporterNIC);
+          if (!nicValidation.isValid) {
+            setNonSLTTransporterNICError(nicValidation.error);
+            showToast("Please fix transporter NIC errors before submitting", "error");
+            return;
+          }
+        }
+
+        // Validate Phone
+        if (nonSLTTransporterPhone.trim()) {
+          const phoneValidation = validatePhone(nonSLTTransporterPhone);
+          if (!phoneValidation.isValid) {
+            setNonSLTTransporterPhoneError(phoneValidation.error);
+            showToast("Please fix transporter phone errors before submitting", "error");
+            return;
+          }
+        }
+
+        // Validate Email
+        if (nonSLTTransporterEmail.trim()) {
+          const emailValidation = validateEmail(nonSLTTransporterEmail);
+          if (!emailValidation.isValid) {
+            setNonSLTTransporterEmailError(emailValidation.error);
+            showToast("Please fix transporter email errors before submitting", "error");
+            return;
+          }
+        }
+      }
+
       // Validation for destination type
       if (destinationType === "slt") {
         // SLT Branch validation - inLocation is required
@@ -645,8 +893,20 @@ const NewRequest = () => {
           return;
         }
 
+        if (companyName.trim().length < 2) {
+          setCompanyNameError("Company/Organization name must be at least 2 characters");
+          showToast("Company/Organization name must be at least 2 characters", "error");
+          return;
+        }
+
         if (!companyAddress.trim()) {
           showToast("Please enter company/organization address", "warning");
+          return;
+        }
+
+        if (companyAddress.trim().length < 2) {
+          setCompanyAddressError("Company/Organization address must be at least 2 characters");
+          showToast("Company/Organization address must be at least 2 characters", "error");
           return;
         }
       }
@@ -681,6 +941,12 @@ const NewRequest = () => {
 
         if (!vehicleNumber || !vehicleModel) {
           showToast("Please fill in all vehicle details", "warning");
+          return;
+        }
+        
+        // Validate vehicle number format
+        if (vehicleNumber.trim() && vehicleNumberError) {
+          showToast("Please fix vehicle number format errors before submitting", "error");
           return;
         }
       }
@@ -861,7 +1127,8 @@ const NewRequest = () => {
       );
     }
   };
-  /*const handleSearchTransporter = async () => {
+  /*
+  const handleSearchTransporter = async () => {
     if (!transporterServiceNo.trim()) {
       showToast("Please enter a service number", "warning");
       return;
@@ -1062,7 +1329,7 @@ const NewRequest = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 p-8">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 to-blue-50 p-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -1081,7 +1348,7 @@ const NewRequest = () => {
             key={index}
             className="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300"
           >
-            <div className={`p-6 bg-gradient-to-br ${stat.color}`}>
+            <div className={`p-6 bg-linear-to-br ${stat.color}`}>
               <div className="flex items-center justify-between">
                 <div className="text-white">
                   <p className="text-lg font-semibold mb-1">{stat.title}</p>
@@ -1102,7 +1369,7 @@ const NewRequest = () => {
         <div className="lg:col-span-1 space-y-8">
           {/* Sender Details Card */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+            <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4">
               <h2 className="text-xl font-semibold text-white flex items-center">
                 <UserCheck className="mr-2 h-6 w-6" />
                 Requester Details
@@ -1134,7 +1401,7 @@ const NewRequest = () => {
 
           {/* ExecutiveOfficer Card */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+            <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4">
               <h2 className="text-xl font-semibold text-white flex items-center">
                 <UserCheck className="mr-2 h-6 w-6" />
                 ExecutiveOfficer Details
@@ -1190,7 +1457,7 @@ const NewRequest = () => {
 
           {/* Destination Type Card */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+            <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4">
               <h2 className="text-xl font-semibold text-white flex items-center">
                 <MapPin className="mr-2 h-6 w-6" />
                 Destination Type
@@ -1234,7 +1501,7 @@ const NewRequest = () => {
 
           {/* Receiver Details Card - MOVED UP */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+            <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4">
               <h2 className="text-xl font-semibold text-white flex items-center">
                 <UserCheck className="mr-2 h-6 w-6" />
                 Receiver Details
@@ -1307,39 +1574,33 @@ const NewRequest = () => {
                 ) : (
                   <>
                     <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-2">
-                        Receiver NIC
-                      </label>
-                      <input
+                      <ValidatedInput
                         type="text"
                         value={receiverNIC}
-                        onChange={(e) => setReceiverNIC(e.target.value)}
-                        placeholder="Enter receiver's NIC number"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                        onChange={handleReceiverNICChange}
+                        error={receiverNICError}
+                        label="Receiver NIC"
+                        placeholder="Enter receiver's NIC number (12 digits or 9 digits + v)"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-2">
-                        Receiver Name
-                      </label>
-                      <input
+                      <ValidatedInput
                         type="text"
                         value={receiverName}
-                        onChange={(e) => setReceiverName(e.target.value)}
+                        onChange={handleReceiverNameChange}
+                        error={receiverNameError}
+                        label="Receiver Name"
                         placeholder="Enter receiver's full name"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-2">
-                        Receiver Contact Number
-                      </label>
-                      <input
-                        type="text"
+                      <ValidatedInput
+                        type="tel"
                         value={receiverContact}
-                        onChange={(e) => setReceiverContact(e.target.value)}
+                        onChange={handleReceiverContactChange}
+                        error={receiverContactError}
+                        label="Receiver Contact Number"
                         placeholder="Enter receiver's contact number"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
                   </>
@@ -1350,7 +1611,7 @@ const NewRequest = () => {
 
           {/* Location Details Card - MOVED DOWN */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+            <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4">
               <h2 className="text-xl font-semibold text-white flex items-center">
                 <MapPin className="mr-2 h-6 w-6" />
                 Location Details
@@ -1429,27 +1690,24 @@ const NewRequest = () => {
               {destinationType === "non-slt" && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Company / Organization Name
-                    </label>
-                    <input
+                    <ValidatedInput
                       type="text"
                       value={companyName}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                      onChange={handleCompanyNameChange}
+                      error={companyNameError}
+                      label="Company / Organization Name"
                       placeholder="Enter company name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Company / Organization Address
-                    </label>
-                    <textarea
-                      rows="3"
+                    <ValidatedInput
+                      type="textarea"
+                      rows={3}
                       value={companyAddress}
-                      onChange={(e) => setCompanyAddress(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                      onChange={handleCompanyAddressChange}
+                      error={companyAddressError}
+                      label="Company / Organization Address"
                       placeholder="Enter company address"
                     />
                   </div>
@@ -1463,7 +1721,7 @@ const NewRequest = () => {
         <div className="lg:col-span-2 space-y-8">
           {/* Items Card */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 flex justify-between items-center">
+            <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4 flex justify-between items-center">
               <h2 className="text-xl font-semibold text-white flex items-center">
                 <Package className="mr-2 h-6 w-6" />
                 Items List
@@ -1903,7 +2161,7 @@ const NewRequest = () => {
 
           {/* Transport Details Card */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+            <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4">
               <h2 className="text-xl font-semibold text-white flex items-center">
                 <MapPin className="mr-2 h-6 w-6" />
                 Transport Details
@@ -1936,6 +2194,12 @@ const NewRequest = () => {
                           setNonSLTTransporterNIC("");
                           setNonSLTTransporterPhone("");
                           setNonSLTTransporterEmail("");
+                          // Clear validation errors
+                          setNonSLTTransporterNameError("");
+                          setNonSLTTransporterNICError("");
+                          setNonSLTTransporterPhoneError("");
+                          setNonSLTTransporterEmailError("");
+                          setVehicleNumberError("");
                         }}
                         className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
                       />
@@ -1973,6 +2237,11 @@ const NewRequest = () => {
                               setNonSLTTransporterNIC("");
                               setNonSLTTransporterPhone("");
                               setNonSLTTransporterEmail("");
+                              // Clear validation errors
+                              setNonSLTTransporterNameError("");
+                              setNonSLTTransporterNICError("");
+                              setNonSLTTransporterPhoneError("");
+                              setNonSLTTransporterEmailError("");
                             }}
                             className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
                           />
@@ -2054,58 +2323,42 @@ const NewRequest = () => {
                   {transporterType === "Non-SLT" && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Carrier Name
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                        <ValidatedInput
                           type="text"
                           value={nonSLTTransporterName}
-                          onChange={(e) =>
-                            setNonSLTTransporterName(e.target.value)
-                          }
+                          onChange={handleNonSLTTransporterNameChange}
+                          error={nonSLTTransporterNameError}
+                          label="Carrier Name"
                           placeholder="Enter carrier name"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          NIC
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                        <ValidatedInput
                           type="text"
                           value={nonSLTTransporterNIC}
-                          onChange={(e) =>
-                            setNonSLTTransporterNIC(e.target.value)
-                          }
-                          placeholder="Enter NIC number"
+                          onChange={handleNonSLTTransporterNICChange}
+                          error={nonSLTTransporterNICError}
+                          label="NIC"
+                          placeholder="Enter NIC number (12 digits or 9 digits + v)"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Phone
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
-                          type="text"
+                        <ValidatedInput
+                          type="tel"
                           value={nonSLTTransporterPhone}
-                          onChange={(e) =>
-                            setNonSLTTransporterPhone(e.target.value)
-                          }
+                          onChange={handleNonSLTTransporterPhoneChange}
+                          error={nonSLTTransporterPhoneError}
+                          label="Phone"
                           placeholder="Enter phone number"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Email
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                        <ValidatedInput
                           type="email"
                           value={nonSLTTransporterEmail}
-                          onChange={(e) =>
-                            setNonSLTTransporterEmail(e.target.value)
-                          }
+                          onChange={handleNonSLTTransporterEmailChange}
+                          error={nonSLTTransporterEmailError}
+                          label="Email"
                           placeholder="Enter email address"
                         />
                       </div>
@@ -2139,6 +2392,12 @@ const NewRequest = () => {
                               setNonSLTTransporterNIC("");
                               setNonSLTTransporterPhone("");
                               setNonSLTTransporterEmail("");
+                              // Clear validation errors
+                              setNonSLTTransporterNameError("");
+                              setNonSLTTransporterNICError("");
+                              setNonSLTTransporterPhoneError("");
+                              setNonSLTTransporterEmailError("");
+                              setVehicleNumberError("");
                             }}
                             className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
                           />
@@ -2213,58 +2472,42 @@ const NewRequest = () => {
                   {transporterType === "Non-SLT" && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Transporter Name
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                        <ValidatedInput
                           type="text"
                           value={nonSLTTransporterName}
-                          onChange={(e) =>
-                            setNonSLTTransporterName(e.target.value)
-                          }
+                          onChange={handleNonSLTTransporterNameChange}
+                          error={nonSLTTransporterNameError}
+                          label="Transporter Name"
                           placeholder="Enter transporter name"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          NIC
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                        <ValidatedInput
                           type="text"
                           value={nonSLTTransporterNIC}
-                          onChange={(e) =>
-                            setNonSLTTransporterNIC(e.target.value)
-                          }
-                          placeholder="Enter NIC number"
+                          onChange={handleNonSLTTransporterNICChange}
+                          error={nonSLTTransporterNICError}
+                          label="NIC"
+                          placeholder="Enter NIC number (12 digits or 9 digits + v)"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Phone
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
-                          type="text"
+                        <ValidatedInput
+                          type="tel"
                           value={nonSLTTransporterPhone}
-                          onChange={(e) =>
-                            setNonSLTTransporterPhone(e.target.value)
-                          }
+                          onChange={handleNonSLTTransporterPhoneChange}
+                          error={nonSLTTransporterPhoneError}
+                          label="Phone"
                           placeholder="Enter phone number"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Email
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                        <ValidatedInput
                           type="email"
                           value={nonSLTTransporterEmail}
-                          onChange={(e) =>
-                            setNonSLTTransporterEmail(e.target.value)
-                          }
+                          onChange={handleNonSLTTransporterEmailChange}
+                          error={nonSLTTransporterEmailError}
+                          label="Email"
                           placeholder="Enter email address"
                         />
                       </div>
@@ -2278,15 +2521,13 @@ const NewRequest = () => {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Vehicle Number
-                        </label>
-                        <input
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                        <ValidatedInput
                           type="text"
                           value={vehicleNumber}
-                          onChange={(e) => setVehicleNumber(e.target.value)}
-                          placeholder="Enter vehicle number"
+                          onChange={handleVehicleNumberChange}
+                          error={vehicleNumberError}
+                          label="Vehicle Number"
+                          placeholder="Enter vehicle number (e.g., ABC-1234 or ABQ4976)"
                         />
                       </div>
                       <div>
@@ -2330,7 +2571,7 @@ const NewRequest = () => {
         >
           <button
             disabled={isSubmitting}
-            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-full hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+            className="inline-flex items-center px-8 py-3 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-full hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
           >
             {isSubmitting ? (
               <>

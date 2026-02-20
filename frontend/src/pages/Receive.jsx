@@ -1072,7 +1072,7 @@ const Receive = () => {
   const filteredRejectedDESCRIPTIONs = applyFilters(rejectedDESCRIPTIONs);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 p-8">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 to-blue-50 p-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -1091,7 +1091,7 @@ const Receive = () => {
           onClick={() => setActiveTab("pending")}
           className={`rounded-2xl shadow-lg overflow-hidden transition-all cursor-pointer ${
             activeTab === "pending"
-              ? "bg-gradient-to-br from-amber-500 to-orange-500 transform scale-105"
+              ? "bg-linear-to-br from-amber-500 to-orange-500 transform scale-105"
               : "bg-white hover:shadow-xl"
           }`}
         >
@@ -1138,7 +1138,7 @@ const Receive = () => {
           onClick={() => setActiveTab("approved")}
           className={`rounded-2xl shadow-lg overflow-hidden transition-all cursor-pointer ${
             activeTab === "approved"
-              ? "bg-gradient-to-br from-emerald-500 to-green-500 transform scale-105"
+              ? "bg-linear-to-br from-emerald-500 to-green-500 transform scale-105"
               : "bg-white hover:shadow-xl"
           }`}
         >
@@ -1185,7 +1185,7 @@ const Receive = () => {
           onClick={() => setActiveTab("rejected")}
           className={`rounded-2xl shadow-lg overflow-hidden transition-all cursor-pointer ${
             activeTab === "rejected"
-              ? "bg-gradient-to-br from-rose-500 to-red-500 transform scale-105"
+              ? "bg-linear-to-br from-rose-500 to-red-500 transform scale-105"
               : "bg-white hover:shadow-xl"
           }`}
         >
@@ -2836,12 +2836,12 @@ const RequestDetailsModal = ({
       <div className="bg-white rounded-2xl max-w-4xl w-full flex flex-col h-[95vh] overflow-hidden shadow-2xl">
         {/* Header */}
         <div
-          className={`p-3 pl-6 pr-6 flex-shrink-0 ${
+          className={`p-3 pl-6 pr-6 shrink-0 ${
             activeTab === "pending"
-              ? "bg-gradient-to-r from-amber-600 to-orange-300"
+              ? "bg-linear-to-r from-amber-600 to-orange-300"
               : activeTab === "approved"
-                ? "bg-gradient-to-br from-emerald-600 to-green-600"
-                : "bg-gradient-to-br from-rose-600 to-red-400"
+                ? "bg-linear-to-br from-emerald-600 to-green-600"
+                : "bg-linear-to-br from-rose-600 to-red-400"
           }`}
         >
           <div className="flex justify-between items-center">
@@ -2920,7 +2920,7 @@ const RequestDetailsModal = ({
         </div>
 
         {/* Main Content - Make this scrollable */}
-        <div className="flex-grow overflow-y-auto p-6">
+        <div className="grow overflow-y-auto p-6">
           {/* Request Details Tab */}
           {currentTab === "details" && (
             <>
@@ -3509,7 +3509,7 @@ const RequestDetailsModal = ({
                             }
                           }}
                           placeholder="Enter Service ID"
-                          className="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
 
                         <button
@@ -3758,7 +3758,7 @@ const RequestDetailsModal = ({
                             setTransportServiceId(e.target.value)
                           }
                           placeholder="Enter Service ID"
-                          className="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                         <button
                           onClick={() =>
@@ -4317,7 +4317,7 @@ const RequestDetailsModal = ({
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl">
                 {/* Modal Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6">
+                <div className="bg-linear-to-r from-blue-600 to-blue-800 p-6">
                   <div className="flex justify-between items-center">
                     <h2 className="text-2xl font-bold text-white flex items-center">
                       <FaPlus className="mr-3" /> Add New Returnable item{" "}
@@ -4469,7 +4469,7 @@ const RequestDetailsModal = ({
                   <FaCheckCircle className="mr-2" /> Approval Information
                 </h3>
 
-                <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100 shadow-sm">
+                <div className="mb-6 bg-linear-to-r from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100 shadow-sm">
                   <div className="flex flex-col md:flex-row items-center justify-between">
                     <div className="mb-4 md:mb-0">
                       <h4 className="text-lg font-semibold text-blue-800 mb-1">
@@ -4482,7 +4482,7 @@ const RequestDetailsModal = ({
                     <div className="flex space-x-3">
                       {/* <button
                         onClick={() => generatePDF(request, transporterDetails, searchedEmployee)}
-                        className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all flex items-center"
+                        className="px-4 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all flex items-center"
                       >
                         <FaFilePdf className="mr-2" /> Download PDF
                       </button> */}
@@ -4655,8 +4655,8 @@ const RequestDetailsModal = ({
         </div>
 
         {/* Fixed bottom section for comments and buttons */}
-        <div className="flex-shrink-0">
-          <div className="border-t border-gray-200 p-4 bg-white flex-shrink-0">
+        <div className="shrink-0">
+          <div className="border-t border-gray-200 p-4 bg-white shrink-0">
             <div className="flex flex-col md:flex-row gap-4">
               {/* Previous/Next Buttons */}
               {currentTab != "navigation" && (
@@ -4775,7 +4775,7 @@ const ImageViewerModal = ({ images, isOpen, onClose, itemDescription }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
-      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl border border-gray-700">
+      <div className="bg-linear-to-br from-gray-900 to-gray-800 rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl border border-gray-700">
         <div className="relative">
           {/* Main display area */}
           <div className="h-80 md:h-96 overflow-hidden relative bg-black">
@@ -4835,7 +4835,7 @@ const ImageViewerModal = ({ images, isOpen, onClose, itemDescription }) => {
           </div>
 
           {/* Header with close button */}
-          <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/70 to-transparent">
+          <div className="absolute top-0 left-0 right-0 p-4 bg-linear-to-b from-black/70 to-transparent">
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-white">
                 {itemDescription}
